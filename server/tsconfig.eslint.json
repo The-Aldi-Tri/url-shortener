@@ -1,14 +1,14 @@
 {
-    "extends": "./tsconfig.json",
-    "include": [
-        // Need to rewrite from tsconfig.json because this is basically override
-        "src/**/*.ts",
-        // List files to be excluded from build/compile process but still want to be lint by eslint
-        "src/tests",
-        "eslint.config.mjs"
-    ],
-    "exclude": [
-        // Need to rewrite minus what included from tsconfig.json because this is basically override
-        "node_modules"
-    ]
+  "extends": "./tsconfig.json",
+  "include": [
+    // Need to rewrite from tsconfig.json because this is basically override
+    "src/**/*.ts",
+    // List files to be excluded from build/compile process but still want to be lint by eslint
+    "src/tests",
+    "eslint.config.mjs"
+  ],
+  "exclude": [
+    // Need to rewrite minus what included from tsconfig.json because this is basically override
+    "node_modules"
+  ]
 }
