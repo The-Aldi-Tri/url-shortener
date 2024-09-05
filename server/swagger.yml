@@ -1,0 +1,310 @@
+openapi: "3.0.3"
+info:
+  title: URL Shortener
+  version: "1.0"
+servers:
+  - url: https://localhost:8000/api
+paths:
+  /users/{userId}:
+    post:
+      description: Add new user
+      requestBody:
+        description: A JSON object containing user information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  $ref: "#/components/schemas/username"
+                fullName:
+                  $ref: "#/components/schemas/fullName"
+                email:
+                  $ref: "#/components/schemas/email"
+                password:
+                  $ref: "#/components/schemas/password"
+            example:
+              username: Cool_User
+              fullName: So Cool User F.R.
+              email: cool.user@example.com
+              password: StrongPa5569$
+      responses:
+        "200":
+          description: User successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    $ref: "#/components/schemas/userId"
+                  username:
+                    $ref: "#/components/schemas/username"
+                  fullName:
+                    $ref: "#/components/schemas/fullName"
+                  email:
+                    $ref: "#/components/schemas/email"
+              example:
+                userId: 01695553-c90c-722d-9b5d-b38dfbbd4bed
+                username: Cool_User
+                fullName: So Cool User F.R.
+                email: cool.user@example.com
+        "400":
+          description: Username have been taken (Duplicate username).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: This username have been taken. Please use another username.
+        "422":
+          description: Data validation failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    $ref: "#/components/schemas/errors"
+              example:
+                errors:
+                  [
+                    Password must be at least 8 characters long,
+                    Password at least contain one lowercase letter,
+                  ]
+        "500":
+          $ref: "#/components/responses/serverError"
+    get:
+      description: Get a user by userId
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get
+      responses:
+        "200":
+          description: User successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    $ref: "#/components/schemas/userId"
+                  username:
+                    $ref: "#/components/schemas/username"
+                  fullName:
+                    $ref: "#/components/schemas/fullName"
+                  email:
+                    $ref: "#/components/schemas/email"
+              example:
+                userId: 01695553-c90c-722d-9b5d-b38dfbbd4bed
+                username: Cool_User
+                fullName: So Cool User F.R.
+                email: cool.user@example.com
+        "400":
+          description: Invalid format of userId.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: Invalid format of userId.
+        "404":
+          description: userId not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: userId not found.
+        "500":
+          $ref: "#/components/responses/serverError"
+    put:
+      description: Edit a user by userId
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get
+      responses:
+        "200":
+          description: User successfully edited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    $ref: "#/components/schemas/userId"
+                  username:
+                    $ref: "#/components/schemas/username"
+                  fullName:
+                    $ref: "#/components/schemas/fullName"
+                  email:
+                    $ref: "#/components/schemas/email"
+              example:
+                userId: 01695553-c90c-722d-9b5d-b38dfbbd4bed
+                username: Cool_User2
+                fullName: So Cool User2 F.R.
+                email: cool2.user@example.com
+        "400":
+          description: Invalid format of userId.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: Invalid format of userId.
+        "404":
+          description: userId not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: userId not found.
+        "500":
+          $ref: "#/components/responses/serverError"
+    delete:
+      description: Delete a user by userId
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get
+      responses:
+        "200":
+          description: User successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    $ref: "#/components/schemas/userId"
+                  username:
+                    $ref: "#/components/schemas/username"
+                  fullName:
+                    $ref: "#/components/schemas/fullName"
+                  email:
+                    $ref: "#/components/schemas/email"
+              example:
+                userId: 01695553-c90c-722d-9b5d-b38dfbbd4bed
+                username: Cool_User2
+                fullName: So Cool User2 F.R.
+                email: cool2.user@example.com
+        "400":
+          description: Invalid format of userId.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: Invalid format of userId.
+        "404":
+          description: userId not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: userId not found.
+        "500":
+          $ref: "#/components/responses/serverError"
+  /urls/{shortUrl}:
+    get:
+      description: Get to long url using short url.
+      parameters:
+        - in: path
+          name: shortUrl
+          schema:
+            type: string
+          required: true
+          description: Short version of original url (long url) to get
+      responses:
+        "301":
+          description: Success. Redirected to original url (long url).
+        "500":
+          $ref: "#/components/responses/serverError"
+    post:
+      description: Create short url using long url.
+      requestBody:
+        description: A JSON object containing url information.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shortUrl:
+                  type: string
+                longUrl:
+                  type: string
+
+      responses:
+        "301":
+          description: Success. Redirected to original url (long url).
+        "500":
+          $ref: "#/components/responses/serverError"
+
+components:
+  schemas:
+    username:
+      type: string
+      pattern: ^[a-zA-Z]{1}[\w]{3,20}
+      description: Start with at least one alphabet character. Contain only word characters (letters, digits, and underscores). Have a total length between 3 and 20 characters.
+    fullName:
+      type: string
+      pattern: /^(?!.*\.{2,})(?!.*\s{2,})(?=[a-zA-Z\.\ ]{3,50})([a-zA-Z]+\.?(?:\ [a-zA-Z]+\.?)*)$
+      description: No two or more consecutive dots (..) and spaces. Have a total length between 3 and 50 characters. Contain only letters, dot, and space.
+    email:
+      type: string
+      format: email
+    password:
+      type: string
+      format: password
+      pattern: ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&])[a-zA-Z0-9!@#$%^&]{8,256}$
+      description: At least 1 digit/number, at least 1 lowercase letter, at least 1 uppercase letter, at least 1 special character from the set !@#$%^&*, at least 8 and maximum 256 characters in total.
+    userId:
+      type: string
+      format: uuid
+      description: Id of the user in uuid v7 format.
+    errors:
+      type: array
+      items:
+        type: string
+      minItems: 1
+      description: Array of errors.
+  responses:
+    serverError:
+      description: An unexpected error occurred.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                default: An unexpected error occurred.

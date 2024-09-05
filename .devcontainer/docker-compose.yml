@@ -1,0 +1,32 @@
+name: URL-Shortener
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
+    volumes:
+      - ../..:/workspaces:cached
+    networks:
+      - url-network
+    command: sleep infinity
+
+  postgres:
+    image: postgres:16.4
+    container_name: postgres
+    volumes:
+      - PGDATA:/var/lib/postgresql/data
+    networks:
+      - url-network
+    env_file: ../server/.env
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - url-network
+
+volumes:
+  PGDATA:
+
+networks:
+  url-network:

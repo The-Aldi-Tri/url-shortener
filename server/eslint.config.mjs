@@ -15,6 +15,9 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    rules: {
+      "no-console": "warn",
+    },
   },
-  { ignores: ["eslint.config.mjs"] },
+  { ignores: ["eslint.config.mjs"] }
 );
