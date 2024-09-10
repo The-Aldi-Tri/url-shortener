@@ -1,9 +1,11 @@
 import bcrypt from "bcrypt";
 import { v7 as generateUUIDv7, validate as validateUUID } from "uuid";
-import { CustomError } from "../../exceptions/customError";
-import { userType } from "../../schemas/userSchema";
-import { AtLeastOne } from "../../utils/atLeastOne";
-import prisma from "../prismaClient";
+import {
+  userPatchPayloadType,
+  userPostPayloadType,
+} from "../../schemas/userSchema";
+import { CustomError } from "../../utils/customError";
+import prisma from "./prismaClient";
 
 export class UserService {
   static createUser = async ({
@@ -11,7 +13,7 @@ export class UserService {
     fullName,
     email,
     password,
-  }: userType) => {
+  }: userPostPayloadType) => {
     const newUser = await prisma.user.create({
       data: {
         id: generateUUIDv7(),
@@ -63,7 +65,7 @@ export class UserService {
 
   static updateUser = async (
     userId: string,
-    updateData: AtLeastOne<userType>
+    updateData: userPatchPayloadType
   ) => {
     if (!validateUUID(userId)) {
       throw new CustomError(400, "Invalid user ID format");

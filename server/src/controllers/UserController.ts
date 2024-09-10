@@ -1,53 +1,42 @@
-import { NextFunction, Request, Response } from "express";
-import { userType } from "../schemas/userSchema";
+import { Request, Response } from "express";
+import {
+  userPatchPayloadType,
+  userPostPayloadType,
+} from "../schemas/userSchema";
 import { UserService } from "../services/postgres/UserService";
-import { AtLeastOne } from "../utils/atLeastOne";
+import { asyncRouteHandlerWrapper } from "../utils/asyncWrapper";
 
 export class UserController {
-  static addUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await UserService.createUser(req.body as userType);
+  static addUser = asyncRouteHandlerWrapper(
+    async (req: Request, res: Response) => {
+      const result = await UserService.createUser(
+        req.body as userPostPayloadType
+      );
       res.status(201).json(result);
-    } catch (error) {
-      next(error);
     }
-  };
+  );
 
-  static getUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+  static getUser = asyncRouteHandlerWrapper(
+    async (req: Request, res: Response) => {
       const result = await UserService.readUser(req.params.userId);
       res.status(200).json(result);
-    } catch (error) {
-      next(error);
     }
-  };
+  );
 
-  static updateUser = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
+  static updateUser = asyncRouteHandlerWrapper(
+    async (req: Request, res: Response) => {
       const result = await UserService.updateUser(
         req.params.userId,
-        req.body as AtLeastOne<Omit<userType, "password">>
+        req.body as userPatchPayloadType
       );
       res.status(200).json(result);
-    } catch (error) {
-      next(error);
     }
-  };
+  );
 
-  static deleteUser = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
+  static deleteUser = asyncRouteHandlerWrapper(
+    async (req: Request, res: Response) => {
       const result = await UserService.deleteUser(req.params.userId);
       res.status(200).json(result);
-    } catch (error) {
-      next(error);
     }
-  };
+  );
 }

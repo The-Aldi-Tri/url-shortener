@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AtLeastOne } from "../utils/atLeastOne";
 
 export const userPayloadSchema = z.object({
   username: z
@@ -56,4 +57,8 @@ export const userPayloadSchema = z.object({
     ),
 });
 
-export type userType = z.infer<typeof userPayloadSchema>;
+export type userPostPayloadType = z.infer<typeof userPayloadSchema>;
+
+export type userPatchPayloadType = AtLeastOne<
+  Omit<userPostPayloadType, "password">
+>;

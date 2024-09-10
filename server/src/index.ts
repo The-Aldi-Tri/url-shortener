@@ -1,58 +1,56 @@
 import { Server } from "http";
 import app from "./app";
+import secrets from "./configs/secrets";
+import prisma from "./services/postgres/prismaClient";
+import { asyncCallbackWrapper } from "./utils/asyncWrapper";
+import logger from "./utils/logger";
 
-let server: Server;
+logger.info("Starting HTTP server...");
+const server = app.listen(secrets.app.port, secrets.app.host, () => {
+  const address = server.address();
+  if (typeof address === "string") {
+    // UNIX socket case
+    logger.info(`Server is listening on ${address}`);
+  } else if (address && address.address && address.port) {
+    // Network interface case
+    logger.info(
+      `Server is listening on http://${address.address}:${address.port}`
+    );
+  } else {
+    logger.error("Unable to determine the server address.");
+  }
+});
 
-const startServer = () => {
-  server = app.listen(8080, "127.0.0.1", () => {
-    console.info(`Server is listening`);
-  });
-};
+// Graceful shutdown function
+const gracefulShutdown = (signal: NodeJS.Signals, server: Server) => {
+  logger.info(`Received ${signal} signal. Closing HTTP server...`);
 
-const startApp = () => {
-  console.info("Starting up app...");
-  startServer();
-};
+  // Close the HTTP server
+  server.close(
+    asyncCallbackWrapper(async () => {
+      logger.info("HTTP server closed.");
 
-void startApp();
-
-const stopServer = () => {
-  return new Promise<void>((resolve, reject) => {
-    server.close((err) => {
-      if (err) {
-        console.error("Error closing server:", err);
-        return reject(err);
+      // Disconnect the Prisma client
+      logger.info("Closing connections...");
+      try {
+        await prisma.$disconnect();
+        logger.info("Database connection closed.");
+      } catch (error) {
+        logger.error("Error closing database connection:", error);
       }
-      console.info("Server closed.");
-      resolve();
-    });
-  });
-};
 
-const shutdown = async () => {
-  console.info("Received shutdown signal. Closing app gracefully...");
-  await stopServer();
-};
-
-process.on("SIGINT", () => {
-  shutdown()
-    .then(() => {
-      console.info("Shutdown success.");
+      // Exit the process
       process.exit(0);
     })
-    .catch((error) => {
-      console.error("Unhandled error during shutdown:", error);
-      process.exit(1);
-    });
-});
-process.on("SIGTERM", () => {
-  shutdown()
-    .then(() => {
-      console.info("Shutdown success.");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Unhandled error during shutdown:", error);
-      process.exit(1);
-    });
-});
+  );
+
+  // Force exit if not closed within 10 seconds
+  setTimeout(() => {
+    logger.error("Forcing exit after timeout...");
+    process.exit(1);
+  }, 10000);
+};
+
+// Handle termination signals
+process.on("SIGINT", () => gracefulShutdown("SIGINT", server));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM", server));

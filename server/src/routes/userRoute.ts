@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import payloadValidator from "../middlewares/payloadValidator";

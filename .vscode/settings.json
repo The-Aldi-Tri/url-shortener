@@ -11,5 +11,6 @@
   "eslint.useFlatConfig": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always"
-  }
+  },
+  "prettier.configPath": "./server/.prettierrc"
 }
