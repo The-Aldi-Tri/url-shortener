@@ -2,7 +2,7 @@ import { Router } from "express";
 import fs from "fs";
 import path from "path";
 import { asyncCallbackWrapper } from "../utils/asyncWrapper";
-import logger from "../utils/logger";
+import { logger } from "../utils/logger";
 
 const router = Router();
 

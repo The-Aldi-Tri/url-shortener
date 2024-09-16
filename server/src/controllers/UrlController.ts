@@ -3,13 +3,12 @@ import { urlPatchPayloadType, urlPostPayloadType } from "../schemas/urlSchema";
 import { UrlService } from "../services/postgres/UrlService";
 import { asyncRouteHandlerWrapper } from "../utils/asyncWrapper";
 
+type reqUser = { id: string };
+
 export class UrlController {
   static addUrl = asyncRouteHandlerWrapper(
     async (req: Request, res: Response) => {
-      if (!req.user) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const user = req.user as Record<string, string>;
+      const user = req.user as reqUser;
       const result = await UrlService.addUrl(
         user.id,
         req.body as urlPostPayloadType
@@ -21,16 +20,13 @@ export class UrlController {
   static getUrl = asyncRouteHandlerWrapper(
     async (req: Request, res: Response) => {
       const result = await UrlService.getOriUrl(req.params.shortUrl);
-      res.status(301).redirect(result);
+      res.redirect(result);
     }
   );
 
   static updateUrl = asyncRouteHandlerWrapper(
     async (req: Request, res: Response) => {
-      if (!req.user) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const user = req.user as Record<string, string>;
+      const user = req.user as reqUser;
       const result = await UrlService.updateUrl(
         user.id,
         req.params.shortUrl,
@@ -42,10 +38,7 @@ export class UrlController {
 
   static deleteUrl = asyncRouteHandlerWrapper(
     async (req: Request, res: Response) => {
-      if (!req.user) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const user = req.user as Record<string, string>;
+      const user = req.user as reqUser;
       const result = await UrlService.deleteUrl(user.id, req.params.shortUrl);
       res.status(200).json(result);
     }

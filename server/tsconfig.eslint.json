@@ -4,11 +4,13 @@
     // Need to rewrite from tsconfig.json because this is basically override
     "src/**/*.ts",
     // List files to be excluded from build/compile process but still want to be lint by eslint
-    "src/tests",
-    "eslint.config.mjs"
+    "src/tests/**/*",
+    "eslint.config.mjs",
+    "jest.config.js"
   ],
   "exclude": [
     // Need to rewrite minus what included from tsconfig.json because this is basically override
-    "node_modules"
+    "node_modules",
+    "dist/**/*.js"
   ]
 }

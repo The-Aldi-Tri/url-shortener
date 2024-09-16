@@ -11,7 +11,7 @@ import {
 const authRouter = Router();
 
 // Override global rate limiter to more restrictive to prevent brute force
-authRouter.use(authLimiter);
+authRouter.use("/auth", authLimiter);
 
 // Login
 authRouter.post(
@@ -21,7 +21,7 @@ authRouter.post(
 );
 
 // Refresh Token
-authRouter.patch(
+authRouter.get(
   "/auth/refresh-token",
   passport.authenticate("refreshToken", { session: false }) as RequestHandler,
   AuthController.refreshToken
@@ -32,7 +32,7 @@ authRouter.patch(
   "/auth/change-password",
   passport.authenticate("accessToken", { session: false }) as RequestHandler,
   payloadValidator(authChangePassPayloadSchema),
-  AuthController.refreshToken
+  AuthController.changePassword
 );
 
 // Logout

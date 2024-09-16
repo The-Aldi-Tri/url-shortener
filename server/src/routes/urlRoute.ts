@@ -15,7 +15,7 @@ urlRouter.post(
   UrlController.addUrl
 );
 urlRouter.get("/urls/:shortUrl", UrlController.getUrl);
-urlRouter.put(
+urlRouter.patch(
   "/urls/:shortUrl",
   passport.authenticate("accessToken", {
     session: false,

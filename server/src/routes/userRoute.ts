@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
+import passport from "passport";
 import { UserController } from "../controllers/UserController";
 import payloadValidator from "../middlewares/payloadValidator";
 import { userPayloadSchema } from "../schemas/userSchema";
@@ -10,12 +11,21 @@ userRouter.post(
   payloadValidator(userPayloadSchema),
   UserController.addUser
 );
-userRouter.get("/users/:userId", UserController.getUser);
+userRouter.get(
+  "/users",
+  passport.authenticate("accessToken", { session: false }) as RequestHandler,
+  UserController.getUser
+);
 userRouter.patch(
-  "/users/:userId",
+  "/users",
+  passport.authenticate("accessToken", { session: false }) as RequestHandler,
   payloadValidator(userPayloadSchema.omit({ password: true }).partial()),
   UserController.updateUser
 );
-userRouter.delete("/users/:userId", UserController.deleteUser);
+userRouter.delete(
+  "/users",
+  passport.authenticate("accessToken", { session: false }) as RequestHandler,
+  UserController.deleteUser
+);
 
 export default userRouter;

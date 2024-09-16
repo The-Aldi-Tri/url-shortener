@@ -4,7 +4,7 @@ import {
   urlPostPayloadType,
 } from "../../schemas/urlSchema";
 import { CustomError } from "../../utils/customError";
-import prisma from "./prismaClient";
+import { prisma } from "./prismaClient";
 
 export class UrlService {
   static addUrl = async (userId: string, urlData: urlPostPayloadType) => {

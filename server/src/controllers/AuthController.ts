@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import secrets from "../configs/secrets";
+import { secrets } from "../configs/secrets";
 import {
   authChangePassPayloadType,
   authLoginPayloadType,
@@ -11,6 +11,8 @@ import {
   generateRefreshToken,
 } from "../utils/generateToken";
 
+type reqUser = { id: string };
+
 export class AuthController {
   static login = asyncRouteHandlerWrapper(
     async (req: Request, res: Response) => {
@@ -18,13 +20,15 @@ export class AuthController {
 
       let userId;
       if ("email" in payload) {
-        userId = await AuthService.loginByEmail(
+        userId = await AuthService.login(
+          "email",
           payload.email,
           payload.password
         );
       }
       if ("username" in payload) {
-        userId = await AuthService.loginByUsername(
+        userId = await AuthService.login(
+          "username",
           payload.username,
           payload.password
         );
@@ -46,10 +50,7 @@ export class AuthController {
   );
 
   static refreshToken = (req: Request, res: Response) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const user = req.user as Record<string, string>;
+    const user = req.user as reqUser;
 
     const newAccessToken = generateAccessToken({ id: user.id });
 
@@ -58,10 +59,7 @@ export class AuthController {
 
   static changePassword = asyncRouteHandlerWrapper(
     async (req: Request, res: Response) => {
-      if (!req.user) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const user = req.user as Record<string, string>;
+      const user = req.user as reqUser;
       const passwords = req.body as authChangePassPayloadType;
 
       await AuthService.changePassword(
@@ -75,10 +73,6 @@ export class AuthController {
   );
 
   static logout = (req: Request, res: Response) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     res.clearCookie("refreshToken");
 
     res.status(200).json({ message: "Logged out successfully" });

@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/customError";
-import logger from "../utils/logger";
+import { logger } from "../utils/logger";
 
 // DON'T FORGET!!!
 // Error middleware NEED exactly 4 params: error, req, res, next

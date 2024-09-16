@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { v7 as UUIDv7 } from "uuid";
-import logger from "../utils/logger";
+import { logger } from "../utils/logger";
 
 export const requestLogger = (
   req: Request,

@@ -1,46 +1,29 @@
 import bcrypt from "bcrypt";
 import { validate as validateUUID } from "uuid";
 import { CustomError } from "../../utils/customError";
-import prisma from "./prismaClient";
+import { prisma } from "./prismaClient";
 
 export class AuthService {
-  static loginByEmail = async (email: string, password: string) => {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-      select: {
-        id: true,
-        password: true,
-      },
-    });
-
-    if (!user) {
-      throw new CustomError(404, "User with this email are not found");
+  static login = async (
+    field: "email" | "username",
+    identifier: string,
+    password: string
+  ) => {
+    let user: { id: string; password: string } | null = null;
+    if (field === "email") {
+      user = await prisma.user.findUnique({
+        where: { email: identifier },
+        select: { id: true, password: true },
+      });
+    } else if (field === "username") {
+      user = await prisma.user.findUnique({
+        where: { username: identifier },
+        select: { id: true, password: true },
+      });
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordMatch) {
-      throw new CustomError(401, "Password incorrect");
-    }
-
-    return user.id;
-  };
-
-  static loginByUsername = async (username: string, password: string) => {
-    const user = await prisma.user.findUnique({
-      where: {
-        username: username,
-      },
-      select: {
-        id: true,
-        password: true,
-      },
-    });
-
     if (!user) {
-      throw new CustomError(404, "User with this username are not found");
+      throw new CustomError(404, `User with this ${field} not found`);
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);

@@ -6,7 +6,7 @@ import {
   VerifiedCallback,
 } from "passport-jwt";
 import { AuthService } from "../services/postgres/AuthService";
-import secrets from "./secrets";
+import { secrets } from "./secrets";
 
 const accessTokenOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

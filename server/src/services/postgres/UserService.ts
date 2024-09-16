@@ -5,7 +5,7 @@ import {
   userPostPayloadType,
 } from "../../schemas/userSchema";
 import { CustomError } from "../../utils/customError";
-import prisma from "./prismaClient";
+import { prisma } from "./prismaClient";
 
 export class UserService {
   static createUser = async ({

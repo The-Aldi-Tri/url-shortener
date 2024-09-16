@@ -3,7 +3,7 @@ services:
   devcontainer:
     image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
     volumes:
-      - ../..:/workspaces:cached
+      - ..:/workspace:cached # Mount the root folder that contains .git
     networks:
       - url-network
     command: sleep infinity
@@ -15,14 +15,9 @@ services:
       - PGDATA:/var/lib/postgresql/data
     networks:
       - url-network
-    env_file: ../server/.env
-
-  adminer:
-    image: adminer
+    env_file: ../server/.env.production
     ports:
-      - 8080:8080
-    networks:
-      - url-network
+      - 5432:5432
 
 volumes:
   PGDATA:

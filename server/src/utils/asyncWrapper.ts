@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import logger from "./logger";
+import { logger } from "../utils/logger";
 
 // Define a type for an async route handler
 type AsyncHandler = (

@@ -1,9 +1,22 @@
+// Load environment variables from .env file
+import dotenv from "dotenv";
+dotenv.config({
+  path:
+    process.env.NODE_ENV == "production"
+      ? ".env.production"
+      : ".env.development",
+  debug:
+    process.env.NODE_ENV == "development" && process.env.JEST_TEST != "yes"
+      ? true
+      : false,
+});
+
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import "./configs/passport"; // import passport strategy for auth
-import secrets from "./configs/secrets";
+import { secrets } from "./configs/secrets";
 import { errorHandler } from "./middlewares/errorHandler";
 import { globalLimiter } from "./middlewares/rateLimiter";
 import { requestLogger } from "./middlewares/requestLogger";
@@ -41,4 +54,4 @@ app.use(unknownRouteHandler);
 // Middleware to Handle errors
 app.use(errorHandler);
 
-export default app;
+export { app };

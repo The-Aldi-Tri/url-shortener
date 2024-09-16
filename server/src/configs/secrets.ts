@@ -1,8 +1,3 @@
-import * as dotenv from "dotenv";
-
-// Load environment variables from .env file
-dotenv.config();
-
 type AppConfig = {
   host: string;
   port: number;
@@ -23,7 +18,7 @@ type Secrets = {
   app: AppConfig;
 };
 
-const secrets: Secrets = {
+export const secrets: Secrets = {
   node_env: process.env.NODE_ENV ?? "development",
   jwt: {
     accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET ?? "secret",
@@ -44,5 +39,3 @@ const secrets: Secrets = {
     reverseProxyIP: process.env.APP_REVERSE_PROXY_IP ?? true,
   },
 };
-
-export default secrets;

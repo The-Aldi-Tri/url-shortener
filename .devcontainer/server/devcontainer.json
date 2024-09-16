@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace/server",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "usernamehw.errorlens",
+        "42Crunch.vscode-openapi",
+        "ms-azuretools.vscode-docker",
+        "Prisma.prisma",
+        "esbenp.prettier-vscode",
+        "YoavBls.pretty-ts-errors"
+      ]
+    }
+  }
+}

@@ -36,7 +36,7 @@ const logger = createLogger({
   transports: [dailyRotateFileTransport],
 });
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV == "development" && process.env.JEST_TEST != "yes") {
   logger.add(
     new transports.Console({
       level: "info",
@@ -45,4 +45,4 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
-export default logger;
+export { logger };

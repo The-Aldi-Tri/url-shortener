@@ -1,0 +1,4 @@
+{
+  "*.(js|jsx|ts|tsx)": ["prettier --check --ignore-unknown", "eslint"],
+  "!(*.js|*.jsx|*.ts|*.tsx)": "prettier --check --ignore-unknown"
+}

@@ -1,25 +1,38 @@
 import { Server } from "http";
-import app from "./app";
-import secrets from "./configs/secrets";
-import prisma from "./services/postgres/prismaClient";
+import { app } from "./app";
+import { secrets } from "./configs/secrets";
+import { prisma } from "./services/postgres/prismaClient";
 import { asyncCallbackWrapper } from "./utils/asyncWrapper";
-import logger from "./utils/logger";
+import { logger } from "./utils/logger";
 
 logger.info("Starting HTTP server...");
-const server = app.listen(secrets.app.port, secrets.app.host, () => {
-  const address = server.address();
-  if (typeof address === "string") {
-    // UNIX socket case
-    logger.info(`Server is listening on ${address}`);
-  } else if (address && address.address && address.port) {
-    // Network interface case
-    logger.info(
-      `Server is listening on http://${address.address}:${address.port}`
-    );
-  } else {
-    logger.error("Unable to determine the server address.");
-  }
-});
+const server = app.listen(
+  secrets.app.port,
+  secrets.app.host,
+  asyncCallbackWrapper(async () => {
+    const address = server.address();
+    if (typeof address === "string") {
+      // UNIX socket case
+      logger.info(`Server is listening on ${address}`);
+    } else if (address && address.address && address.port) {
+      // Network interface case
+      logger.info(
+        `Server is listening on http://${address.address}:${address.port}`
+      );
+    } else {
+      logger.error("Unable to determine the server address.");
+    }
+
+    // Connect the Prisma client
+    logger.info("Establishing connections...");
+    try {
+      await prisma.$connect();
+      logger.info("Database connected.");
+    } catch (error) {
+      logger.error("Error establishing database connection:", error);
+    }
+  })
+);
 
 // Graceful shutdown function
 const gracefulShutdown = (signal: NodeJS.Signals, server: Server) => {
