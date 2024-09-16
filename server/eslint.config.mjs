@@ -16,8 +16,8 @@ export default tseslint.config(
       },
     },
     rules: {
-      "no-console": "off",
+      "no-console": "warn",
     },
   },
-  { ignores: ["eslint.config.mjs"] }
+  { ignores: ["eslint.config.mjs", "jest.config.js", "dist/", "node_modules/"] }
 );
