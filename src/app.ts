@@ -1,10 +1,6 @@
 // Load environment variables from .env file
 import dotenv from "dotenv";
 dotenv.config({
-  path:
-    process.env.NODE_ENV == "production"
-      ? ".env.production"
-      : ".env.development",
   debug:
     process.env.NODE_ENV == "development" && process.env.JEST_TEST != "yes"
       ? true

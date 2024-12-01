@@ -1,2 +1,2 @@
 npx lint-staged
-exit 1 # To test husky without real commit
+# exit 1 # To test husky without real commit
