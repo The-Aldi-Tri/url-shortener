@@ -1,4 +1,4 @@
-name: URL-Shortener
+name: Url-Shortener-Api-expressJs
 services:
   devcontainer:
     image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
@@ -9,18 +9,17 @@ services:
     command: sleep infinity
 
   postgres:
-    image: postgres:16.4
-    container_name: postgres
+    image: postgres:latest
     volumes:
-      - PGDATA:/var/lib/postgresql/data
+      - PgData:/var/lib/postgresql/data
     networks:
       - url-network
-    env_file: ../server/.env.production
+    env_file: ../.env.production
     ports:
       - 5432:5432
 
 volumes:
-  PGDATA:
+  PgData:
 
 networks:
   url-network:

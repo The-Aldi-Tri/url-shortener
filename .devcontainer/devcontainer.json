@@ -1,8 +1,8 @@
 {
-  "name": "server",
-  "dockerComposeFile": ["../docker-compose.yml"],
+  "name": "Url-Shortener-Api-expressJs",
+  "dockerComposeFile": ["./docker-compose.yml"],
   "service": "devcontainer",
-  "workspaceFolder": "/workspace/server",
+  "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
       "extensions": [

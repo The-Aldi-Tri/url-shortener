@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userPayloadSchema } from "../schemas/userSchema";
+import { userPayloadSchema } from "./userSchema";
 
 export const authLoginPayloadSchema = z.union([
   userPayloadSchema.pick({ username: true, password: true }),

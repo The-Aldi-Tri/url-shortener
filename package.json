@@ -12,7 +12,7 @@
     "test": "dotenv -e .env.development -v JEST_TEST=yes -- jest --verbose",
     "migrate:prod": "dotenv -e .env.production -- npx prisma migrate",
     "migrate:dev": "dotenv -e .env.development -- npx prisma migrate",
-    "prepare": "cd .. && husky server/.husky"
+    "prepare": "husky"
   },
   "author": "Aldi Tri M.",
   "license": "ISC",
